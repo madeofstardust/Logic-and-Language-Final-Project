@@ -1,0 +1,107 @@
+is_a(lark, bird)
+is_a(hound, dog)
+is_a(dog, animal)
+is_a(cat, animal)
+is_a(student, person)
+is_a(bachelor, man)
+is_a(man, person)
+is_a(woman, person)
+is_a(person, human)
+is_a(human, person)
+is_a(european, person) %!!!
+
+is_a(fly, hover)
+is_a(hover, move)
+is_a(walk, move)
+is_a(run, move)
+is_a(obtain, receive)
+is_a(receive, obtain)
+is_a(build, finish)
+
+is_a(kiss, touch)
+is_a(snore, sleep)
+is_a('girl', 'young woman') %
+is_a('young woman', 'girl') % sick-7606, 303, 1988,
+is_a('boy', 'young man') %sick-5781
+is_a('young man', 'boy')
+is_a('polish', 'clean') %sick-1909
+%is_a('trek', 'hike') %sick-3182 slow trek->hike, but not 3181
+%is_a('dash', 'jump') %sick-3728 actually neutral
+is_a('jump', 'bounce') %sick-4127 in wn mistake 'bound'
+is_a('dive', 'jump') %sick-8039
+is_a('run', 'sprint') %sick-8532
+is_a('look', 'stare') %sick-3750, noise problem
+is_a('bikini', 'swimming suite') %sick-8986
+
+%is_a(climb, climb_up) %sick-4006, 4011
+%is_a(climb_up, climb) %sick-4006, 4011
+
+%is_a(play, practice) %sick-3586 but 2842
+%is_a(practice, play) %sick-3586 but 2842
+
+is_a(note, paper) %sick-4360 needs, not found in wordnet
+is_a(fit, apply)  %sick-4734 needs, not found in wordnet
+is_a(food, meal)  %sick-5110 needs, not found in wordnet
+is_a(ringer, wrestler) %sick-5113
+is_a(wrestler, ringer) %sick-5113
+is_a(pour, put) %sick-5938
+is_a(vegetable, ingredient) %sick-5938
+is_a(lunge, jump) %sick-7795
+%is_a(lady, girl) %sick-8163, sick-1643 but sick-2027
+is_a(big, huge) %sick-9359
+is_a(huge, big)
+is_a(elder, elderly) %sick-9571
+is_a(elderly, elder)
+is_a(woman, lady) %sick-9584
+is_a(fight, match) %sick-44
+%is_a(hat, haeddress) %sick-240
+is_a(group, crowd) %sick-311
+is_a(crowd, group) %sick-311
+is_a('hole', 'earth')
+
+% frequent pairs
+is_a(man, person)
+is_a(lady, woman)
+is_a(woman, person)
+is_a(woman, lady)
+is_a(child, person)
+is_a(snowboarder, person)
+is_a(skateboarder, person)
+is_a(keyboard, piano)
+is_a(rider, person)
+is_a(lady, person)
+is_a(cliff, rock)
+is_a(rock, cliff)
+is_a(child, kid)
+is_a(kid, child)
+is_a(wave, water)
+is_a(road, street)
+is_a(street, road)
+is_a(practitioner, trainer)
+is_a(trainer, practitioner)
+is_a(bicycle, bike)
+is_a(bike, bicycle)
+is_a(person, animal)
+is_a(dog, animal)
+is_a(girl, person)
+is_a(boy, person)
+is_a(ocean, water)
+is_a(cowboy, man)
+is_a(lake, water)
+is_a(player, person)
+is_a(grass, lawn)
+is_a(lawn, grass)
+is_a(car, vehicle)
+is_a(whisk, wire)
+is_a(fountain, water)
+%is_a(cyclist, person) % sick-8606
+is_a(sheet, paper)  %sick-5264 deosnt like
+%is_a(paper, sheet) %sick-4363 doesnt like
+
+% our relations
+is_a(big, huge) %not in wordnet
+is_a(wood, wooded area) %sick-1193
+is_a(stage, onstage) %sick-1266
+is_a(play, strum) %sick-1495
+is_a(burrow, dig) %sick-1584
+

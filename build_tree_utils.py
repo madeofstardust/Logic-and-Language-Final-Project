@@ -13,6 +13,9 @@ traverse_tree function is a simple template function for visiting every node in 
 from TreeNode import TreeNode
 
 
+# Extract the information needed to build the tree from the derivation
+# input: the string version of the derivation
+# output: line_dict(will be the input of build_the_tree)
 def get_line_dict(ccg_derivation):
   lines = ccg_derivation.splitlines()
 
@@ -36,11 +39,12 @@ def get_line_dict(ccg_derivation):
       cathegory = cathegory[1:]
       indent +=1
     
+    # tr(s:_G854478/ (s:_G854484\np),
     # delete the ':del/:ng' in category
     s = "(".join(splitted_line[1:])
     while s.find(':') != -1:
       l1 = s.find(':')
-      for j in range(1,5):
+      for j in range(1,10):
         if s[l1 + j] == '\\' or s[l1 + j] == '/' or s[l1 + j] == ',' or s[l1 + j] == ')':
           l2 = l1 + j
           break

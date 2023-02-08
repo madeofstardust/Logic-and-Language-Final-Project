@@ -1,7 +1,10 @@
 lexical_semantic_rules = {
   ## EXCEPTIONS
+  ",": '',
   # conj + 'CC'
-  'and': '\\A\\B\\C.(exists x y.(x = B(C) & y = A(C) & continuation(x, y)))',
+  'and': '\\A\\B\\C.(B(C) & A(C))',
+
+#\\A\\B\\C.(exists x y.(x = B(C) & y = A(C) & continuation(x, y)))
   'but': '\\A\\B\\C.(exists x.exists y.(x=B(C) & y=A(C) & contrast(x,y)))',
   # np/n + 'DT'
   'a':        '\\P\\Q(exist x.(P(x) & Q(x)))',
@@ -10,8 +13,8 @@ lexical_semantic_rules = {
   'no':       '\\P\\Q -(exists x.(P(x) & Q(x)))',
   'each':     '\\P\\Q -(exists x.-Q(x) & P(x))',
   'every':    '\\P\\Q(-(exists x.(-Q(x) & P(x))))',
-  'the':      '\\P\\Q(exist x.(P(x) & all y.(P(y) -> x=y) & Q(x)))',
-  # 'the':     '\\P\\Q(exists x.(P(x) & Q(x)))',
+  # 'the':      '\\P\\Q(exist x.(P(x) & all y.(P(y) -> x=y) & Q(x)))',
+  'the':     '\\P\\Q(exists x.(P(x) & Q(x)))',
   'another':  '\\P\\Q(exist x.(P(x) & all y.(P(y) -> x!=y) & Q(x)))',
   # np + 'DT'
   'this':     '\\P.(exists x.({lemma}(x) & P(x)))',

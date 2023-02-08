@@ -11,87 +11,116 @@ from nltk.sem.logic import *
 read_expr = Expression.fromstring
 
 ## Start this function from the leaf.
-def assign_compositional_semantics(node):
- 
-    # get both of the parents:
-    parent_1 = node.get_parent_left()
-    parent_2 = node.get_parent_right()
-
-    # never gets here!!!
-    # if parents are None, it means we are at the roots. CS is defined for those, so just return
-    if parent_1 is None and parent_2 is None:
-        print("root")
-        return
+def get_compositional_semantics(node):
   
-    # check if it's a situation where there is only one parent:
-    if parent_1 is not None:
-        # get the compositional semantics of parent_1:
-        p1_cs = parent_1.get_compositional_semantics()
-        p1_ls = parent_1.get_lexical_semantics()
-
-        # if the parent doesn't have the compositional semantics, run this function on the parent:
-        if p1_cs is None:
-            _ = assign_compositional_semantics(parent_1)
-            p1_cs = parent_1.get_compositional_semantics()
-            p1_ls = parent_1.get_lexical_semantics()
-
-        #If there is no parent_2, it means that the rule was lx, which just changes the type of the node:
-        # lx changes the lexical semantics of the node
-        if parent_2 is None:
-            # print(f"lx rule, the type should be {p1_cs}")
-            lx = read_expr(f"(\\P\\Q(exist x.(P(x) & Q(x))))({p1_ls})").simplify()
-            node.set_compositional_semantics(p1_cs)
-            node.set_lexical_semantics(lx)
+  # get both of the parents:
+  parent_1 = node.get_parent_left()
+  parent_2 = node.get_parent_right()
+  
+  # never gets here!!!
+  # if parents are None, it means we are at the roots. CS is defined for those, so just return
+  if parent_1 is None and parent_2 is None:
+    print("root")
+    return
+  
+  # check if it's a situation where there is only one parent:
+  if parent_1 is not None:
+    # get the compositional semantics of parent_1:
+    p1_cs = parent_1.get_compositional_semantics()
+    p1_ls = parent_1.get_lexical_semantics()
     
-        else:
-            # if there is the second parent, run repeat the steps done for parent one for this parent:
-            p2_cs = parent_2.get_compositional_semantics()
-            p2_ls = parent_2.get_lexical_semantics()
-            if p2_cs is None:
-                _ = assign_compositional_semantics(parent_2)
-                p2_cs = parent_2.get_compositional_semantics()
-                p2_ls = parent_2.get_lexical_semantics()
+    # if the parent doesn't have the compositional semantics, run this function on the parent:
+    if p1_cs is None:
+      _ = get_compositional_semantics(parent_1)
+      p1_cs = parent_1.get_compositional_semantics()
+      p1_ls = parent_1.get_lexical_semantics()
+
+    #If there is no parent_2, it means that the rule was lx, which just changes the type of the node:
+    # lx changes the lexical semantics of the node
+    if parent_2 is None:
+      # print(f"lx rule, the type should be {p1_cs}")
+      lx = read_expr(f"(\\P\\Q(exist x.(P(x) & Q(x))))({p1_ls})").simplify()
+      # print(f"lexical semantics should change to {lx}")
+      node.set_compositional_semantics(p1_cs)
+      node.set_lexical_semantics(lx)
+      # print(node.get_cathegory())
+      # print(node.get_lexical_semantics())
+    
+    else:
+      # if there is the second parent, run repeat the steps done for parent one for this parent:
+      p2_cs = parent_2.get_compositional_semantics()
+      p2_ls = parent_2.get_lexical_semantics()
+      if p2_cs is None:
+        _ = get_compositional_semantics(parent_2)
+        p2_cs = parent_2.get_compositional_semantics()
+        p2_ls = parent_2.get_lexical_semantics()
   
 
-            ## to check the order, check the composition rule of this node.
-            compositional_rule = node.get_compositional_rule()
+      # print("\n")
+      # print(f"node:{node}")
+      # print(f"node.cathegory: {node.cathegory}")
+      # print(f"parent 1: {parent_1} cs: {p1_cs} ls: {p1_ls}")
+      # print(f"parent 2: {parent_2} cs: {p2_cs} ls: {p2_ls}")
 
-            # check if there are any @ inside; if the semantic is compound, put it into brackets
-            if "@" in p1_cs and p1_cs.split("and")[0]!="[[":
-                p1_cs = f"({p1_cs})"
-            if "@" in p2_cs and p2_cs.split("and")[0]!="[[":
-                p2_cs = f"({p2_cs})"
+      '''
+      ## Important are the parents rules, so we get them:
+      p1_ccg_cathegory = parent_1.get_cathegory()
+      p2_ccg_cathegory = parent_2.get_cathegory()
+      ARE THEY??
+      '''
+      ## to check the order, check the composition rule of this node.
+      compositional_rule = node.get_compositional_rule()
 
 
-            # apply rules:
-            if compositional_rule=='fa':
-                node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
-                node.set_lexical_semantics(read_expr(f"({p1_ls})({p2_ls})").simplify())
+      # check if there are any @ inside; if the semantic is compound, put it into brackets
+      if "@" in p1_cs and p1_cs.split("and")[0]!="[[":
+        p1_cs = f"({p1_cs})"
+      if "@" in p2_cs and p2_cs.split("and")[0]!="[[":
+        p2_cs = f"({p2_cs})"
 
-            elif compositional_rule=='ba':
-                node.set_compositional_semantics(f'{p2_cs}@{p1_cs}')
-                node.set_lexical_semantics(read_expr(f"({p2_ls})({p1_ls})").simplify())
+      if p1_ls == "":
+        node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
+        node.set_lexical_semantics(read_expr(f"({p2_ls})").simplify())
+        return
+      if p2_ls == "":
+        node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
+        node.set_lexical_semantics(read_expr(f"({p1_ls})").simplify())
+        return
 
-            elif compositional_rule =='conj':
-                node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
-                node.set_lexical_semantics(read_expr(f"({p1_ls})({p2_ls})").simplify())
+      # apply rules"
+      if compositional_rule=='fa':
+        # print(f"forward application, the type should be {p1_cs}@{p2_cs}")
+        node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
+        node.set_lexical_semantics(read_expr(f"({p1_ls})({p2_ls})").simplify())
 
-            elif compositional_rule == 'fc':
-                node.set_compositional_semantics(f'\\x.{p1_cs}@({p2_cs}@x)')
-                node.set_lexical_semantics(read_expr(f"(\\x.{p1_ls})(({p2_ls})(x))").simplify())
+      elif compositional_rule=='ba':
+        # print(f"backward application, the type should be {p2_cs}@{p1_cs}")
+        node.set_compositional_semantics(f'{p2_cs}@{p1_cs}')
+        node.set_lexical_semantics(read_expr(f"({p2_ls})({p1_ls})").simplify())
 
-            elif compositional_rule == 'bxc':
-                node.set_compositional_semantics(f'\\x.{p2_cs}@({p1_cs}@x)')
-                node.set_lexical_semantics(read_expr(f"(\\x.{p2_ls})(({p1_ls})(x))").simplify())
+      elif compositional_rule =='conj':
+        # print(f"conjunction, defining as {p1_cs}@{p2_cs}")
+        node.set_compositional_semantics(f'{p1_cs}@{p2_cs}')
+        node.set_lexical_semantics(read_expr(f"({p1_ls})({p2_ls})").simplify())
 
-            elif compositional_rule =="lx":
-                node.set_compositional_semantics(f'{p1_cs}')
-                node.set_lexical_semantics(f"({p1_cs})")
+      elif compositional_rule == 'fc':
+        # print(f"forward composition, the type should be \\x.{p1_cs}@({p2_cs}@x)")
+        node.set_compositional_semantics(f'\\x.{p1_cs}@({p2_cs}@x)')
+        node.set_lexical_semantics(read_expr(f"(\\x.{p1_ls})(({p2_ls})(x))").simplify())
 
-          ##### ADD REMAINING RULES {'rp'}
+      elif compositional_rule == 'bxc':
+        # print(f"backward crossing composition, the type should be \\x.{p2_cs}@({p1_cs}@x)")
+        node.set_compositional_semantics(f'\\x.{p2_cs}@({p1_cs}@x)')
+        node.set_lexical_semantics(read_expr(f"(\\x.{p2_ls})(({p1_ls})(x))").simplify())
+      
+      elif compositional_rule =="lx":
+        # print(f"lexical change., the type should be {p1_cs}")
+        node.set_compositional_semantics(f'{p1_cs}')
+        node.set_lexical_semantics(f"({p1_cs})")
 
-        return node
+      ##### ADD REMAINING RULES {'rp'}
 
+    return node
 
 def get_lexical_semantics(node):
     word = node.get_word().lower().strip('\'')

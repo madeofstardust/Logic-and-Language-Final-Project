@@ -63,16 +63,27 @@ class TreeNode:
 
       # Get the compositional semantics:
       mw = self.word
-      if mw[0] == "'":
-        mw = mw[1:]
-      if mw[-1] =="'":
-        mw = mw[:-1]
+      # mw can be "'"
+      if mw == "'":
+        mw = ","
+        self.grammar = ","
+        self.word = ","
+        self.lemma = ","
+        self.POS = ","
+        self.cathegory = self.grammar
+      else:
+        if mw[0] == "'":
+          mw = mw[1:]
+        if mw[-1] =="'":
+          mw = mw[:-1]
 
       compositional_semantics = f"[[{mw}]]"
 
       self.compositional_semantics = compositional_semantics
     
-  ## more GETters:
+  def set_word(self, word):
+    self.word = word
+
   def get_word(self):
     return self.word
   
@@ -85,14 +96,14 @@ class TreeNode:
   def get_POS(self):
     return self.POS
 
-  def get_compositional_rule(self):
-    return self.rule
+  def set_compositional_semantics(self, semantics):
+    self.compositional_semantics = semantics
 
   def get_compositional_semantics(self):
     return self.compositional_semantics
 
-  def set_compositional_semantics(self, semantics):
-    self.compositional_semantics = semantics
+  def get_compositional_rule(self):
+    return self.rule
 
   def set_lexical_semantics(self, lx):
     self.lexical_semantics = lx
@@ -100,7 +111,9 @@ class TreeNode:
   def get_lexical_semantics(self):
     return self.lexical_semantics
 
-
+  #def set_POS(self):
+  #  if self.grammar is not None:
+  #    self.POS = self.grammar[3]
 
   def __repr__(self):
     return(f"{self.cathegory}, {self.rule}, {self.grammar}, {self.compositional_semantics}")
